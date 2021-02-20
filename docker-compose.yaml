@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo
+    container_name: db
+    restart: on-failure:5
+    ports:
+      - "27017:27017"
+    networks:
+      - custom
+    env_file:
+      - env.list
+    volumes:
+      - data:/data/db/
+  mongo-express:
+    image: mongo-express
+    container_name: mongoexpress
+    restart: on-failure:5
+    ports:
+      - "8081:8081"
+    networks:
+      - custom
+    env_file:
+      - env.list
+    depends_on:
+      - mongo
+  scraper:
+    build: 
+      context: .
+      dockerfile: Dockerfile_scraper
+    container_name: scraperapi
+    networks:
+      - custom
+    env_file:
+      - env.list
+    restart: on-failure:5
+    depends_on:
+      - mongo
+volumes:
+  db-data:
+  data:
+
+networks:
+  custom:
+    driver: bridge

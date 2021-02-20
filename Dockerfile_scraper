@@ -1,0 +1,17 @@
+FROM golang:1.15
+
+COPY go.mod /proyecto/
+COPY go.sum /proyecto/
+
+COPY /cmd/scraper/ /proyecto/cmd/scraper/
+COPY /pkg/mongo /proyecto/pkg/mongo/
+COPY /pkg/models /proyecto/pkg/models/
+
+# build a go binary
+WORKDIR /proyecto/cmd/scraper/
+RUN go build -o /proyecto/bin/scraper .
+
+# move to binaries path
+WORKDIR /proyecto/bin/
+
+CMD ./scraper
