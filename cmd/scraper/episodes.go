@@ -24,7 +24,9 @@ func processEpisodes() (*models.Episodes, error) {
 	}
 	for _, episode := range episodes.Episodes {
 		for i, character := range episode.Characters {
-			episode.Characters[i] = strings.Split(character, "character/")[1]
+			if character != "" {
+				episode.Characters[i] = strings.Split(character, "character/")[1]
+			}
 		}
 	}
 	return episodes, nil
