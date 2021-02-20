@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -77,11 +79,11 @@ func getInfo(url string) ([]byte, error) {
 		return nil, err
 	}
 
-	var body []byte
-	_, err = response.Body.Read(body)
+	buff := bytes.NewBuffer(nil)
+	_, err = io.Copy(buff, response.Body)
 	if err != nil {
-		log.Println("error in Read ", err)
+		log.Println("error in copy ", err)
 		return nil, err
 	}
-	return body, nil
+	return buff.Bytes(), nil
 }

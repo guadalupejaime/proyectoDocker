@@ -24,7 +24,9 @@ func processLocations() (*models.Locations, error) {
 	}
 	for _, location := range locations.Locations {
 		for i, character := range location.Residents {
-			location.Residents[i] = strings.Split(character, "character/")[1]
+			if character != "" {
+				location.Residents[i] = strings.Split(character, "character/")[1]
+			}
 		}
 	}
 	return locations, nil

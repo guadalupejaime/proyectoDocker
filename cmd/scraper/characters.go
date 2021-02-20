@@ -23,10 +23,16 @@ func processCharacters() (*models.Characters, error) {
 		return nil, err
 	}
 	for _, character := range characters.Characters {
-		character.Location.URL = strings.Split(character.Location.URL, "location/")[1]
-		character.Origin.URL = strings.Split(character.Origin.URL, "location/")[1]
+		if character.Location.URL != "" {
+			character.Location.URL = strings.Split(character.Location.URL, "location/")[1]
+		}
+		if character.Origin.URL != "" {
+			character.Origin.URL = strings.Split(character.Origin.URL, "location/")[1]
+		}
 		for i, episode := range character.Episode {
-			character.Episode[i] = strings.Split(episode, "episode/")[1]
+			if episode != "" {
+				character.Episode[i] = strings.Split(episode, "episode/")[1]
+			}
 		}
 	}
 	return characters, nil
