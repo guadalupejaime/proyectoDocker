@@ -1,7 +1,7 @@
 package mongo
 
 import (
-	"time"
+	"fmt"
 
 	mgo "gopkg.in/mgo.v2"
 )
@@ -14,15 +14,9 @@ type Repository struct {
 }
 
 func NewStorage(dburl string, database string, username string, password string) (*Repository, error) {
-	info := &mgo.DialInfo{
-		Addrs:    []string{dburl},
-		Timeout:  60 * time.Second,
-		Database: database,
-		Username: username,
-		Password: password,
-	}
+
 	if Repo == nil {
-		session, err := mgo.DialWithInfo(info)
+		session, err := mgo.Dial(fmt.Sprintf("mongodb://%s:%s@%s/%s?authSource=admin", username, password, dburl, database))
 		if err != nil {
 			return nil, err
 		}
