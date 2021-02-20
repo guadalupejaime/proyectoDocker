@@ -1,8 +1,8 @@
 version: "3.8"
 services:
-  mongo:
+  mongodb:
     image: mongo
-    container_name: db
+    container_name: mongodb
     restart: on-failure:5
     ports:
       - "27017:27017"
@@ -23,7 +23,7 @@ services:
     env_file:
       - env.list
     depends_on:
-      - mongo
+      - mongodb
   scraper:
     build: 
       context: .
@@ -35,7 +35,7 @@ services:
       - env.list
     restart: on-failure:5
     depends_on:
-      - mongo
+      - mongodb
 volumes:
   db-data:
   data:
