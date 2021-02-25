@@ -7,14 +7,13 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
-	"github.com/guadalupej/proyecto/pkg/characters"
 	"github.com/guadalupej/proyecto/pkg/http/middleware"
 	"github.com/guadalupej/proyecto/pkg/models"
 	"github.com/guadalupej/proyecto/pkg/newerrors"
 )
 
 type CharactersService interface {
-	GetCharacters(filters characters.Filters) ([]characters.Character, error)
+	GetCharacters(filters models.CharactersFilters) ([]models.Character, error)
 }
 type CharacterController struct {
 	CharactersService CharactersService
@@ -36,12 +35,10 @@ func (c *CharacterController) Routes() chi.Router {
 
 func (c *CharacterController) List(w http.ResponseWriter, r *http.Request) {
 	// Get param for query
-	params := r.URL.Query()
 	limit := r.Context().Value(middleware.ContextKeyLimit).(int)
-
 	offset := r.Context().Value(middleware.ContextKeyOffset).(int)
-
-	filters := characters.Filters{
+	params := r.URL.Query()
+	filters := models.CharactersFilters{
 		Limit:    limit,
 		Offset:   offset,
 		Name:     params.Get("name"),
@@ -56,10 +53,8 @@ func (c *CharacterController) List(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		checkError(err, w, r)
 	}
-	resp := &models.Characters{}
-	for _, char := range list {
-		resp.Characters = append(resp.Characters, *models.ToCharacterModel(char))
-	}
+	resp := &models.Characters{Characters: list}
+
 	render.Status(r, http.StatusOK)
 	render.Render(w, r, resp)
 	return

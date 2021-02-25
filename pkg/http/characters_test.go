@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -10,48 +11,38 @@ import (
 
 	"github.com/brianvoe/gofakeit"
 	"github.com/go-chi/render"
-	"github.com/guadalupej/proyecto/pkg/characters"
+	"github.com/guadalupej/proyecto/pkg/http/middleware"
 	"github.com/guadalupej/proyecto/pkg/models"
 )
 
 func TestCharacterController_List(t *testing.T) {
-	charactersList := make([]models.Character, 5)
-	species := []string{"Human", "Alien"}
-	status := []string{"Alive", "unknown", "Dead"}
+	charactersList := make([]models.Character, 0)
+
 	for i := 0; i < 5; i++ {
-		gofakeit.ShuffleStrings(species)
-		gofakeit.ShuffleStrings(status)
-		charactersList[i] = models.Character{
-			ID:      int(gofakeit.Int64()),
-			Name:    gofakeit.FirstName(),
-			Type:    gofakeit.LastName(),
-			Gender:  gofakeit.Gender(),
-			Image:   gofakeit.ImageURL(120, 120),
-			Status:  status[0],
-			Species: species[0],
-			Origin: models.OriginTiny{
-				Name: gofakeit.FirstName(),
-				URL:  fmt.Sprintf("%d", gofakeit.Int64()),
-			},
-			Location: models.LocationTiny{
-				Name: gofakeit.FirstName(),
-				URL:  fmt.Sprintf("%d", gofakeit.Int64()),
-			},
-			Episode: []string{fmt.Sprintf("%d", gofakeit.Int64())},
-		}
+		var ch models.Character
+		gofakeit.Struct(&ch)
+
+		charactersList = append(charactersList, ch)
+
 	}
+
 	tests := []struct {
 		name             string
 		characterService CharactersService
 		expectedStatus   int
 		expectedResponse *models.Characters
-		filters          characters.Filters
+		filters          models.CharactersFilters
 	}{
 		{
-			name:             "simple get",
-			characterService: &CharactersServiceMock{},
+			name:             "Status OK",
+			characterService: &CharactersServiceMock{List: charactersList},
 			expectedStatus:   http.StatusOK,
 			expectedResponse: &models.Characters{Characters: charactersList},
+		},
+		{
+			name:             "Internal Server Error",
+			characterService: &CharactersServiceMock{List: charactersList, Error: true},
+			expectedStatus:   http.StatusInternalServerError,
 		},
 	}
 	for _, tt := range tests {
@@ -59,13 +50,14 @@ func TestCharacterController_List(t *testing.T) {
 			c := &CharacterController{
 				CharactersService: tt.characterService,
 			}
-			req, err := http.NewRequest("GET", "/vouchers", nil)
+			req, err := http.NewRequest("GET", "", nil)
 			if err != nil {
 				t.Fatal(err)
 			}
-			q := req.URL.Query()
-			q.Add("monto", "123")
-			req.URL.RawQuery = q.Encode()
+			ctx := context.WithValue(req.Context(), middleware.ContextKeyOffset, 10)
+			req = req.WithContext(ctx)
+			ctx = context.WithValue(req.Context(), middleware.ContextKeyLimit, 10)
+			req = req.WithContext(ctx)
 
 			rr := httptest.NewRecorder()
 
@@ -85,6 +77,8 @@ func TestCharacterController_List(t *testing.T) {
 					t.Errorf("cannot unmarshal return value\n %s \n error: %v",
 						rr.Body.String(), err)
 				}
+
+				fmt.Println(response)
 				if !reflect.DeepEqual(response, tt.expectedResponse) {
 					t.Errorf("response different = %v, want %v", response, tt.expectedResponse)
 				}
