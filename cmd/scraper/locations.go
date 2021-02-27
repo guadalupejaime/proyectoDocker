@@ -22,9 +22,11 @@ func processLocations() (*models.Locations, error) {
 		log.Println("error in decode ", err)
 		return nil, err
 	}
-	for _, location := range locations.Locations {
-		for i, character := range location.Residents {
-			location.Residents[i] = strings.Split(character, "character/")[1]
+	for i, location := range locations.Locations {
+		for j, character := range location.Residents {
+			if character != "" {
+				locations.Locations[i].Residents[j] = strings.Split(character, "character/")[1]
+			}
 		}
 	}
 	return locations, nil

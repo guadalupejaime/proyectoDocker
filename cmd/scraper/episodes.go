@@ -22,9 +22,11 @@ func processEpisodes() (*models.Episodes, error) {
 		log.Println("error in decode ", err)
 		return nil, err
 	}
-	for _, episode := range episodes.Episodes {
-		for i, character := range episode.Characters {
-			episode.Characters[i] = strings.Split(character, "character/")[1]
+	for i, episode := range episodes.Episodes {
+		for j, character := range episode.Characters {
+			if character != "" {
+				episodes.Episodes[i].Characters[j] = strings.Split(character, "character/")[1]
+			}
 		}
 	}
 	return episodes, nil
