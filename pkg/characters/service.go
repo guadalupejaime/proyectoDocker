@@ -1,10 +1,17 @@
 package characters
 
-import "log"
+import (
+	"log"
+
+	"github.com/guadalupej/proyecto/pkg/models"
+)
 
 // storage stores all the
 type storage interface {
-	GetCharacters(filters Filters) ([]Character, error)
+	// characters
+	GetCharacters(filters models.CharactersFilters) ([]models.Character, error)
+	GetCharacterByID(id int) (*models.Character, error)
+	InsertCharacter(characters models.Character) error
 }
 type Service struct {
 	storage storage
@@ -16,11 +23,29 @@ func NewService(storage storage) *Service {
 	}
 }
 
-func (s Service) GetCharacters(filters Filters) ([]Character, error) {
+func (s Service) GetCharacters(filters models.CharactersFilters) ([]models.Character, error) {
 	characters, err := s.storage.GetCharacters(filters)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	return characters, nil
+}
+
+func (s Service) GetCharacterByID(id int) (*models.Character, error) {
+	characters, err := s.storage.GetCharacterByID(id)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return characters, nil
+}
+
+func (s Service) InsertCharacter(characters models.Character) error {
+	err := s.storage.InsertCharacter(characters)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
 }

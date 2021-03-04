@@ -1,4 +1,4 @@
-package characters
+package locations
 
 import (
 	"reflect"
@@ -8,32 +8,32 @@ import (
 	"github.com/guadalupej/proyecto/pkg/models"
 )
 
-func TestGetCharacters_test(t *testing.T) {
+func TestGetLocations_test(t *testing.T) {
 	type fields struct {
 		storage storage
 	}
-	characters := make([]models.Character, 0)
+	locations := make([]models.Location, 0)
 	for i := 0; i < 5; i++ {
-		var ch models.Character
-		gofakeit.Struct(&ch)
+		var lc models.Location
+		gofakeit.Struct(&lc)
 
-		characters = append(characters, ch)
+		locations = append(locations, lc)
 	}
 	test := []struct {
 		name    string
 		fields  fields
 		wantErr bool
-		args    models.CharactersFilters
-		want    []models.Character
+		args    models.LocationFilters
+		want    []models.Location
 	}{
 		{
 			name: "happy path",
 			fields: fields{
 				storage: storageMock{
-					Characters: characters,
+					Locations: locations,
 				},
 			},
-			want: characters,
+			want: locations,
 		},
 		{
 			name: "error storage",
@@ -49,45 +49,44 @@ func TestGetCharacters_test(t *testing.T) {
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewService(tt.fields.storage)
-			got, err := s.GetCharacters(models.CharactersFilters{})
+			got, err := s.GetLocations(models.LocationFilters{})
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Service error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Service.GetCharacters() = %v, want %v", got, tt.want)
+				t.Errorf("Service.GetLocations() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestGetCharacter_test(t *testing.T) {
+func TestGetLocationByID_test(t *testing.T) {
 	type fields struct {
 		storage storage
 	}
-	characters := make([]models.Character, 0)
-	for i := 0; i < 1; i++ {
-		var ch models.Character
-		gofakeit.Struct(&ch)
+	locations := make([]models.Location, 0)
+	var location models.Location
+	gofakeit.Struct(&location)
+	locations = append(locations, location)
 
-		characters = append(characters, ch)
-	}
 	test := []struct {
 		name    string
 		fields  fields
 		wantErr bool
-		want    *models.Character
+		args    models.LocationFilters
+		want    *models.Location
 		id      int
 	}{
 		{
 			name: "happy path",
 			fields: fields{
 				storage: storageMock{
-					Characters: characters,
+					Locations: locations,
 				},
 			},
-			want: &characters[0],
-			id:   2,
+			want: &locations[0],
+			id:   1,
 		},
 		{
 			name: "error storage",
@@ -103,19 +102,19 @@ func TestGetCharacter_test(t *testing.T) {
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewService(tt.fields.storage)
-			got, err := s.GetCharacterByID(tt.id)
+			got, err := s.GetLocationByID(tt.id)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Service error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Service.GetCharacters() = %v, want %v", got, tt.want)
+				t.Errorf("Service.GetLocationByID(%v) = %v, want %v", tt.id, got, tt.want)
 			}
 		})
 	}
 }
 
-func testinsertCharacter_test(t *testing.T) {
+func TestInsertLocation_test(t *testing.T) {
 	type fields struct {
 		storage storage
 	}
@@ -123,7 +122,7 @@ func testinsertCharacter_test(t *testing.T) {
 		name    string
 		fields  fields
 		wantErr bool
-		arg     models.Character
+		arg     models.Location
 	}{
 		{
 			name: "happy path",
@@ -145,7 +144,7 @@ func testinsertCharacter_test(t *testing.T) {
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewService(tt.fields.storage)
-			err := s.InsertCharacter(tt.arg)
+			err := s.InsertLocation(tt.arg)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Service error = %v, wantErr %v", err, tt.wantErr)
 				return
