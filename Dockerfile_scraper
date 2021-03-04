@@ -4,8 +4,7 @@ COPY go.mod /proyecto/
 COPY go.sum /proyecto/
 
 COPY /cmd/scraper/ /proyecto/cmd/scraper/
-COPY /pkg/mongo /proyecto/pkg/mongo/
-COPY /pkg/models /proyecto/pkg/models/
+COPY /pkg/ /proyecto/pkg/
 
 # build a go binary
 WORKDIR /proyecto/cmd/scraper/
