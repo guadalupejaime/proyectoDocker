@@ -11,7 +11,12 @@ func (r *Repository) InsertLocation(location models.Location) error {
 	session := r.Session.Copy()
 	defer session.Close()
 	com := session.DB(r.DatabaseName).C("locations")
-	err := com.Insert(&location)
+	id, err := r.getCounterLocation()
+	if err != nil {
+		return err
+	}
+	location.ID = *id
+	err = com.Insert(&location)
 	if err != nil {
 		if mgo.IsDup(err) {
 			return newerrors.NewErrBadRequest("id already exists")

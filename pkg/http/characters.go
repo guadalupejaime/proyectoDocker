@@ -1,19 +1,19 @@
 package http
 
 import (
+	"errors"
 	"net/http"
-	"net/url"
-	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/guadalupej/proyecto/pkg/http/middleware"
 	"github.com/guadalupej/proyecto/pkg/models"
-	"github.com/guadalupej/proyecto/pkg/newerrors"
 )
 
 type CharactersService interface {
 	GetCharacters(filters models.CharactersFilters) ([]models.Character, error)
+	GetCharacterByID(id int) (*models.Character, error)
+	InsertCharacter(episodes models.CharacterPayload) error
 }
 type CharacterController struct {
 	CharactersService CharactersService
@@ -60,33 +60,44 @@ func (c *CharacterController) List(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func paramToInt(param string, val url.Values) *int {
-	if s := val.Get(param); s != "" {
-		i, err := strconv.Atoi(s)
-		if err != nil {
-			return nil
-		}
-		return &i
+func (c *CharacterController) Get(w http.ResponseWriter, r *http.Request) {
+	// Get param for query
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		render.Render(w, r, models.ErrInvalidRequest(errors.New("missing id")))
+		return
 	}
-	return nil
+
+	characterIDint := stringToInt(id)
+	if characterIDint == nil {
+		render.Render(w, r, models.ErrInvalidRequest(errors.New("id most be number")))
+		return
+	}
+
+	character, err := c.CharactersService.GetCharacterByID(*characterIDint)
+	if err != nil {
+		checkError(err, w, r)
+	}
+
+	render.Status(r, http.StatusOK)
+	render.Render(w, r, character)
+	return
 }
 
-func checkError(err error, w http.ResponseWriter, r *http.Request) {
-	if _, ok := err.(*newerrors.ErrNotFound); ok {
-		render.Render(w, r, models.ErrNotFound(err))
+func (c *CharacterController) Create(w http.ResponseWriter, r *http.Request) {
 
-	} else if _, ok := err.(*newerrors.ErrBadRequest); ok {
+	// Unmarshal User Payload
+	data := &models.CharacterPayload{}
+	if err := render.Bind(r, data); err != nil {
 		render.Render(w, r, models.ErrInvalidRequest(err))
-
-	} else if _, ok := err.(*newerrors.ErrUnauthorized); ok {
-		render.Render(w, r, models.ErrUnauthorized(err))
-
-	} else if _, ok := err.(*newerrors.ErrForbidden); ok {
-		render.Render(w, r, models.ErrForbidden(err))
-	} else if _, ok := err.(*newerrors.ErrConflict); ok {
-		render.Render(w, r, models.ErrConflict(err))
-
-	} else {
-		render.Render(w, r, models.ErrInternalServer(err))
+		return
 	}
+
+	err := c.CharactersService.InsertCharacter(*data)
+	if err != nil {
+		checkError(err, w, r)
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return
 }

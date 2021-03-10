@@ -2,6 +2,7 @@ package locations
 
 import (
 	"log"
+	"time"
 
 	"github.com/guadalupej/proyecto/pkg/models"
 )
@@ -42,8 +43,18 @@ func (s Service) GetLocationByID(id int) (*models.Location, error) {
 	return location, nil
 }
 
-func (s Service) InsertLocation(location models.Location) error {
-	err := s.storage.InsertLocation(location)
+func (s Service) InsertLocation(location models.LocationPayload) error {
+
+	newLocation := models.Location{
+		Name:      location.Name,
+		Type:      location.Type,
+		Dimension: location.Dimension,
+		Residents: location.Residents,
+		URL:       location.URL,
+		Created:   time.Now(),
+	}
+
+	err := s.storage.InsertLocation(newLocation)
 	if err != nil {
 		log.Println(err)
 		return err

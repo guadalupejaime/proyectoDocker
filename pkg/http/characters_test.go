@@ -40,9 +40,13 @@ func TestCharacterController_List(t *testing.T) {
 			expectedResponse: &models.Characters{Characters: charactersList},
 		},
 		{
-			name:             "Internal Server Error",
-			characterService: &CharactersServiceMock{List: charactersList, Error: true},
-			expectedStatus:   http.StatusInternalServerError,
+			name: "Internal Server Error",
+			characterService: &CharactersServiceMock{
+				List:      charactersList,
+				CodeError: 500,
+				MsgError:  "error in storage",
+			},
+			expectedStatus: http.StatusInternalServerError,
 		},
 	}
 	for _, tt := range tests {

@@ -122,7 +122,7 @@ func TestInsertLocation_test(t *testing.T) {
 		name    string
 		fields  fields
 		wantErr bool
-		arg     models.Location
+		arg     models.LocationPayload
 	}{
 		{
 			name: "happy path",

@@ -11,7 +11,12 @@ func (r *Repository) InsertCharacter(character models.Character) error {
 	session := r.Session.Copy()
 	defer session.Close()
 	com := session.DB(r.DatabaseName).C("characters")
-	err := com.Insert(&character)
+	id, err := r.getCounterCharacters()
+	if err != nil {
+		return err
+	}
+	character.ID = *id
+	err = com.Insert(&character)
 	if err != nil {
 		if mgo.IsDup(err) {
 			return newerrors.NewErrBadRequest("id already exists")
