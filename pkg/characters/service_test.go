@@ -123,7 +123,7 @@ func testinsertCharacter_test(t *testing.T) {
 		name    string
 		fields  fields
 		wantErr bool
-		arg     models.Character
+		arg     models.CharacterPayload
 	}{
 		{
 			name: "happy path",

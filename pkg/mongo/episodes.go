@@ -11,7 +11,12 @@ func (r *Repository) InsertEpisode(episode models.Episode) error {
 	session := r.Session.Copy()
 	defer session.Close()
 	com := session.DB(r.DatabaseName).C("episodes")
-	err := com.Insert(&episode)
+	id, err := r.getCounterEpisodes()
+	if err != nil {
+		return err
+	}
+	episode.ID = *id
+	err = com.Insert(&episode)
 	if err != nil {
 		if mgo.IsDup(err) {
 			return newerrors.NewErrBadRequest("id already exists")
@@ -40,7 +45,7 @@ func (r *Repository) GetEpisodes(filters models.EpisodesFilters) ([]models.Episo
 	return episodes, nil
 }
 
-func (r *Repository) GetEpisodeByID(id string) (*models.Episode, error) {
+func (r *Repository) GetEpisodeByID(id int) (*models.Episode, error) {
 	session := r.Session.Copy()
 	defer session.Close()
 	com := session.DB(r.DatabaseName).C("episodes")

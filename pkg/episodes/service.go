@@ -2,6 +2,7 @@ package episodes
 
 import (
 	"log"
+	"time"
 
 	"github.com/guadalupej/proyecto/pkg/models"
 )
@@ -42,8 +43,17 @@ func (s Service) GetEpisodeByID(id int) (*models.Episode, error) {
 	return episodes, nil
 }
 
-func (s Service) InsertEpisode(episodes models.Episode) error {
-	err := s.storage.InsertEpisode(episodes)
+func (s Service) InsertEpisode(episodes models.EpisodePayload) error {
+
+	newEpisode := models.Episode{
+		Name:       episodes.Name,
+		AirDate:    episodes.AirDate,
+		Episode:    episodes.Episode,
+		Characters: episodes.Characters,
+		Created:    time.Now(),
+	}
+
+	err := s.storage.InsertEpisode(newEpisode)
 	if err != nil {
 		log.Println(err)
 		return err
