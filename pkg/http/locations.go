@@ -11,7 +11,7 @@ import (
 )
 
 type LocationsService interface {
-	GetLocations(filters models.LocationFilters) ([]models.Location, error)
+	GetLocations(filters models.LocationFilters) ([]models.Location, *int, error)
 	GetLocationByID(id int) (*models.Location, error)
 	InsertLocation(location models.LocationPayload) error
 }
@@ -31,6 +31,8 @@ func (c *LocationController) Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.With(middleware.Paginate(100, 500, 0)).Get("/", c.List)
+	r.Get("/{id}", c.Get)
+	r.Post("/", c.Create)
 	return r
 }
 
@@ -46,18 +48,24 @@ func (c *LocationController) List(w http.ResponseWriter, r *http.Request) {
 		Type:      params.Get("type"),
 		Dimension: params.Get("dimension"),
 	}
-	list, err := c.LocationsService.GetLocations(filters)
+	list, total, err := c.LocationsService.GetLocations(filters)
 	if err != nil {
 		checkError(err, w, r)
+		return
 	}
-	resp := &models.Locations{Locations: list}
+
+	resp := &models.Locations{
+		Locations:     list,
+		TotalFound:    *total,
+		TotalReturned: len(list),
+	}
 
 	render.Status(r, http.StatusOK)
 	render.Render(w, r, resp)
-	return
 }
 
 func (c *LocationController) Get(w http.ResponseWriter, r *http.Request) {
+
 	// Get param for query
 	id := chi.URLParam(r, "id")
 	if id == "" {
@@ -78,7 +86,7 @@ func (c *LocationController) Get(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusOK)
 	render.Render(w, r, location)
-	return
+
 }
 
 func (c *LocationController) Create(w http.ResponseWriter, r *http.Request) {
@@ -96,5 +104,5 @@ func (c *LocationController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusAccepted)
-	return
+
 }

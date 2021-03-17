@@ -26,7 +26,7 @@ func (r *Repository) InsertCharacter(character models.Character) error {
 	return nil
 }
 
-func (r *Repository) GetCharacters(filters models.CharactersFilters) ([]models.Character, error) {
+func (r *Repository) GetCharacters(filters models.CharactersFilters) ([]models.Character, *int, error) {
 	session := r.Session.Copy()
 	defer session.Close()
 	com := session.DB(r.DatabaseName).C("characters")
@@ -36,9 +36,13 @@ func (r *Repository) GetCharacters(filters models.CharactersFilters) ([]models.C
 	characters := []models.Character{}
 	err := com.Find(searchQuery).Limit(filters.Limit).Skip(filters.Offset).All(&characters)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return characters, nil
+	n, err := com.Find(searchQuery).Count()
+	if err != nil {
+		return nil, nil, err
+	}
+	return characters, &n, nil
 }
 
 func (r *Repository) GetCharacterByID(id int) (*models.Character, error) {

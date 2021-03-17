@@ -26,7 +26,7 @@ func (r *Repository) InsertLocation(location models.Location) error {
 	return nil
 }
 
-func (r *Repository) GetLocations(filters models.LocationFilters) ([]models.Location, error) {
+func (r *Repository) GetLocations(filters models.LocationFilters) ([]models.Location, *int, error) {
 	session := r.Session.Copy()
 	defer session.Close()
 	com := session.DB(r.DatabaseName).C("locations")
@@ -41,11 +41,15 @@ func (r *Repository) GetLocations(filters models.LocationFilters) ([]models.Loca
 		query["dimension"] = filters.Dimension
 	}
 	locations := []models.Location{}
-	err := com.Find(query).Limit(filters.Limit).Skip(filters.Limit).All(&locations)
+	err := com.Find(query).Limit(filters.Limit).Skip(filters.Offset).All(&locations)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return locations, nil
+	n, err := com.Find(query).Count()
+	if err != nil {
+		return nil, nil, err
+	}
+	return locations, &n, nil
 }
 
 func (r *Repository) GetLocationByID(id int) (*models.Location, error) {

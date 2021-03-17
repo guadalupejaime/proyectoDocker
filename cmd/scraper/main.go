@@ -22,6 +22,16 @@ func main() {
 		log.Println(err)
 		return
 	}
+	counters := models.Counters{
+		CountEpisode:    0,
+		CountLocation:   0,
+		CountCharacters: 0,
+	}
+	err = db.InsertCounters(counters)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	log.Println("process characters...")
 	characters, err := processCharacters()
 	if err != nil {
@@ -67,19 +77,6 @@ func main() {
 			log.Println(err)
 			return
 		}
-	}
-	totalCharacters := len(characters.Characters)
-	totalEpisodes := len(episodes.Episodes)
-	totalLocations := len(locations.Locations)
-	counters := models.Counters{
-		CountEpisode:    totalEpisodes,
-		CountLocation:   totalLocations,
-		CountCharacters: totalCharacters,
-	}
-	err = db.InsertCounters(counters)
-	if err != nil {
-		log.Println(err)
-		return
 	}
 }
 

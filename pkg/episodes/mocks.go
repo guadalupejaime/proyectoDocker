@@ -12,11 +12,11 @@ type storageMock struct {
 	errorMsg     string
 }
 
-func (s storageMock) GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, error) {
+func (s storageMock) GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, *int, error) {
 	if s.errorStorage {
-		return nil, errors.New(s.errorMsg)
+		return nil, nil, errors.New(s.errorMsg)
 	}
-	return s.Episodes, nil
+	return s.Episodes, nil, nil
 }
 
 func (s storageMock) GetEpisodeByID(id int) (*models.Episode, error) {

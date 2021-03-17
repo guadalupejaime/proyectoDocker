@@ -3,13 +3,12 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
 	"testing"
 
-	"github.com/brianvoe/gofakeit"
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/go-chi/render"
 	"github.com/guadalupej/proyecto/pkg/http/middleware"
 	"github.com/guadalupej/proyecto/pkg/models"
@@ -37,7 +36,11 @@ func TestCharacterController_List(t *testing.T) {
 			name:             "Status OK",
 			characterService: &CharactersServiceMock{List: charactersList},
 			expectedStatus:   http.StatusOK,
-			expectedResponse: &models.Characters{Characters: charactersList},
+			expectedResponse: &models.Characters{
+				Characters:    charactersList,
+				TotalFound:    len(charactersList),
+				TotalReturned: len(charactersList),
+			},
 		},
 		{
 			name: "Internal Server Error",
@@ -82,7 +85,7 @@ func TestCharacterController_List(t *testing.T) {
 						rr.Body.String(), err)
 				}
 
-				fmt.Println(response)
+				// fmt.Println(response)
 				if !reflect.DeepEqual(response, tt.expectedResponse) {
 					t.Errorf("response different = %v, want %v", response, tt.expectedResponse)
 				}

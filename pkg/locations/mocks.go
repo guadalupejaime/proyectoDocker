@@ -12,11 +12,11 @@ type storageMock struct {
 	errorMsg     string
 }
 
-func (s storageMock) GetLocations(filters models.LocationFilters) ([]models.Location, error) {
+func (s storageMock) GetLocations(filters models.LocationFilters) ([]models.Location, *int, error) {
 	if s.errorStorage {
-		return nil, errors.New(s.errorMsg)
+		return nil, nil, errors.New(s.errorMsg)
 	}
-	return s.Locations, nil
+	return s.Locations, nil, nil
 }
 
 func (s storageMock) GetLocationByID(id int) (*models.Location, error) {

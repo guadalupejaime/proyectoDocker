@@ -11,7 +11,7 @@ import (
 )
 
 type CharactersService interface {
-	GetCharacters(filters models.CharactersFilters) ([]models.Character, error)
+	GetCharacters(filters models.CharactersFilters) ([]models.Character, *int, error)
 	GetCharacterByID(id int) (*models.Character, error)
 	InsertCharacter(episodes models.CharacterPayload) error
 }
@@ -30,6 +30,8 @@ func (c *CharacterController) Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.With(middleware.Paginate(100, 500, 0)).Get("/", c.List)
+	r.Get("/{id}", c.Get)
+	r.Post("/", c.Create)
 	return r
 }
 
@@ -49,11 +51,16 @@ func (c *CharacterController) List(w http.ResponseWriter, r *http.Request) {
 		Location: params.Get("location"),
 		Episode:  params.Get("episode"),
 	}
-	list, err := c.CharactersService.GetCharacters(filters)
+	list, total, err := c.CharactersService.GetCharacters(filters)
 	if err != nil {
 		checkError(err, w, r)
+		return
 	}
-	resp := &models.Characters{Characters: list}
+	resp := &models.Characters{
+		Characters:    list,
+		TotalFound:    *total,
+		TotalReturned: len(list),
+	}
 
 	render.Status(r, http.StatusOK)
 	render.Render(w, r, resp)

@@ -7,7 +7,9 @@ import (
 )
 
 type Locations struct {
-	Locations []Location `bson:"results" json:"results"`
+	Locations     []Location `bson:"results" json:"results"`
+	TotalFound    int        `bson:"total_found" json:"total_found"`
+	TotalReturned int        `bson:"total_returned" json:"total_returned"`
 }
 
 func (lm *Locations) Render(w http.ResponseWriter, r *http.Request) error {
@@ -57,9 +59,6 @@ func (lp *LocationPayload) validate() (err error) {
 		return errors.New("missing field type")
 	}
 
-	if len(lp.Residents) == 0 {
-		return errors.New("missing field residents")
-	}
 	return
 }
 

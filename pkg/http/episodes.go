@@ -11,7 +11,7 @@ import (
 )
 
 type EpisodesService interface {
-	GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, error)
+	GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, *int, error)
 	GetEpisodeByID(id int) (*models.Episode, error)
 	InsertEpisode(episodes models.EpisodePayload) error
 }
@@ -46,11 +46,16 @@ func (c *EpisodeController) List(w http.ResponseWriter, r *http.Request) {
 		Name:    params.Get("name"),
 		Episode: params.Get("episode"),
 	}
-	list, err := c.EpisodesService.GetEpisodes(filters)
+	list, total, err := c.EpisodesService.GetEpisodes(filters)
 	if err != nil {
 		checkError(err, w, r)
+		return
 	}
-	resp := &models.Episodes{Episodes: list}
+	resp := &models.Episodes{
+		Episodes:      list,
+		TotalFound:    *total,
+		TotalReturned: len(list),
+	}
 
 	render.Status(r, http.StatusOK)
 	render.Render(w, r, resp)

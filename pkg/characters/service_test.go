@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/brianvoe/gofakeit"
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/guadalupej/proyecto/pkg/models"
 )
 
@@ -49,7 +49,7 @@ func TestGetCharacters_test(t *testing.T) {
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewService(tt.fields.storage)
-			got, err := s.GetCharacters(models.CharactersFilters{})
+			got, _, err := s.GetCharacters(models.CharactersFilters{})
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Service error = %v, wantErr %v", err, tt.wantErr)
 				return
