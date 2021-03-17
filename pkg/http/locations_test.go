@@ -10,7 +10,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/brianvoe/gofakeit"
+	"github.com/brianvoe/gofakeit/v6"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/guadalupej/proyecto/pkg/http/middleware"
 	"github.com/guadalupej/proyecto/pkg/models"
@@ -34,10 +35,14 @@ func TestLocationController_List(t *testing.T) {
 		filters          models.LocationFilters
 	}{
 		{
-			name:             "Status OK",
-			locationService:  &LocationsServiceMock{ListLocations: locationsList},
-			expectedStatus:   http.StatusOK,
-			expectedResponse: &models.Locations{Locations: locationsList},
+			name:            "Status OK",
+			locationService: &LocationsServiceMock{ListLocations: locationsList},
+			expectedStatus:  http.StatusOK,
+			expectedResponse: &models.Locations{
+				Locations:     locationsList,
+				TotalFound:    len(locationsList),
+				TotalReturned: len(locationsList),
+			},
 		},
 		{
 			name: "Internal Server Error",
@@ -81,9 +86,10 @@ func TestLocationController_List(t *testing.T) {
 						rr.Body.String(), err)
 				}
 
-				fmt.Println(response)
+				// fmt.Println(response)
 				if !reflect.DeepEqual(response, tt.expectedResponse) {
-					t.Errorf("response different = %v, want %v", response, tt.expectedResponse)
+					// t.Errorf("response different = %v, want %v", response, tt.expectedResponse)
+					t.Errorf("response different = , want ")
 				}
 			}
 		})
@@ -108,6 +114,7 @@ func TestLocationController_GetLocationByID(t *testing.T) {
 			expectedResponse: &location,
 			id:               1,
 		},
+
 		{
 			name: "404 - Not Found",
 			locationService: &LocationsServiceMock{
@@ -146,27 +153,30 @@ func TestLocationController_GetLocationByID(t *testing.T) {
 			req = req.WithContext(ctx)
 			ctx = context.WithValue(req.Context(), middleware.ContextKeyLimit, 10)
 			req = req.WithContext(ctx)
-
+			rctx := chi.NewRouteContext()
+			rctx.URLParams.Add("id", fmt.Sprintf("%d", tt.id))
+			req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 			rr := httptest.NewRecorder()
 
-			render.SetContentType(render.ContentTypeJSON)(http.HandlerFunc(c.List)).ServeHTTP(rr, req)
+			render.SetContentType(render.ContentTypeJSON)(http.HandlerFunc(c.Get)).ServeHTTP(rr, req)
 
 			// Check the status code is what we expect.
 			if status := rr.Code; status != tt.expectedStatus {
 				t.Errorf("handler returned wrong status code: got %v want %v",
 					status, tt.expectedStatus)
+				return
 			}
 
 			// Check return value
 			if tt.expectedStatus == http.StatusOK {
-				var response *models.Locations
+				var response *models.Location
 				err = json.Unmarshal(rr.Body.Bytes(), &response)
 				if err != nil {
 					t.Errorf("cannot unmarshal return value\n %s \n error: %v",
 						rr.Body.String(), err)
 				}
 
-				fmt.Println(response)
+				// fmt.Println(response)
 				if !reflect.DeepEqual(response, tt.expectedResponse) {
 					t.Errorf("response different = %v, want %v", response, tt.expectedResponse)
 				}
@@ -188,7 +198,8 @@ func TestLocationController_Insert(t *testing.T) {
 		{
 			name:            "200 - Status OK",
 			locationService: &LocationsServiceMock{},
-			expectedStatus:  http.StatusOK,
+			expectedStatus:  http.StatusAccepted,
+			location:        *location,
 		},
 		{
 			name: "500 - Internal Server Error",
@@ -196,6 +207,7 @@ func TestLocationController_Insert(t *testing.T) {
 				CodeError: 500,
 				MsgError:  "Internal Server Error",
 			},
+			location:       *location,
 			expectedStatus: http.StatusInternalServerError,
 		},
 	}
@@ -217,7 +229,7 @@ func TestLocationController_Insert(t *testing.T) {
 
 			rr := httptest.NewRecorder()
 
-			render.SetContentType(render.ContentTypeJSON)(http.HandlerFunc(c.List)).ServeHTTP(rr, req)
+			render.SetContentType(render.ContentTypeJSON)(http.HandlerFunc(c.Create)).ServeHTTP(rr, req)
 
 			// Check the status code is what we expect.
 			if status := rr.Code; status != tt.expectedStatus {

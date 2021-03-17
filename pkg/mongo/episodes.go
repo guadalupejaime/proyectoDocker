@@ -26,7 +26,7 @@ func (r *Repository) InsertEpisode(episode models.Episode) error {
 	return nil
 }
 
-func (r *Repository) GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, error) {
+func (r *Repository) GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, *int, error) {
 	session := r.Session.Copy()
 	defer session.Close()
 	com := session.DB(r.DatabaseName).C("episodes")
@@ -40,9 +40,13 @@ func (r *Repository) GetEpisodes(filters models.EpisodesFilters) ([]models.Episo
 	episodes := []models.Episode{}
 	err := com.Find(searchQuery).Limit(filters.Limit).Skip(filters.Offset).All(&episodes)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return episodes, nil
+	n, err := com.Find(searchQuery).Count()
+	if err != nil {
+		return nil, nil, err
+	}
+	return episodes, &n, nil
 }
 
 func (r *Repository) GetEpisodeByID(id int) (*models.Episode, error) {

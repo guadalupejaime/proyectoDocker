@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
 	"testing"
 
-	"github.com/brianvoe/gofakeit"
+	"github.com/brianvoe/gofakeit/v6"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/guadalupej/proyecto/pkg/http/middleware"
 	"github.com/guadalupej/proyecto/pkg/models"
@@ -33,10 +33,14 @@ func TestEpisodeController_List(t *testing.T) {
 		filters          models.EpisodesFilters
 	}{
 		{
-			name:             "Status OK",
-			episodeService:   &EpisodesServiceMock{ListEpisodes: episodesList},
-			expectedStatus:   http.StatusOK,
-			expectedResponse: &models.Episodes{Episodes: episodesList},
+			name:           "Status OK",
+			episodeService: &EpisodesServiceMock{ListEpisodes: episodesList},
+			expectedStatus: http.StatusOK,
+			expectedResponse: &models.Episodes{
+				Episodes:      episodesList,
+				TotalFound:    len(episodesList),
+				TotalReturned: len(episodesList),
+			},
 		},
 		{
 			name: "error 500",
@@ -80,7 +84,7 @@ func TestEpisodeController_List(t *testing.T) {
 						rr.Body.String(), err)
 				}
 
-				fmt.Println(response)
+				// fmt.Println(response)
 				if !reflect.DeepEqual(response, tt.expectedResponse) {
 					t.Errorf("response different = %v, want %v", response, tt.expectedResponse)
 				}
@@ -154,6 +158,9 @@ func TestEpisodeController_Get(t *testing.T) {
 				t.Fatal(err)
 			}
 
+			rctx := chi.NewRouteContext()
+			rctx.URLParams.Add("id", tt.id)
+			req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 			rr := httptest.NewRecorder()
 
 			render.SetContentType(render.ContentTypeJSON)(http.HandlerFunc(c.Get)).ServeHTTP(rr, req)
@@ -173,7 +180,7 @@ func TestEpisodeController_Get(t *testing.T) {
 						rr.Body.String(), err)
 				}
 
-				fmt.Println(response)
+				// fmt.Println(response)
 				if !reflect.DeepEqual(response, tt.expectedResponse) {
 					t.Errorf("response different = %v, want %v", response, tt.expectedResponse)
 				}

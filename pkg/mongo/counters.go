@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/guadalupej/proyecto/pkg/models"
 	"github.com/guadalupej/proyecto/pkg/newerrors"
@@ -35,6 +36,7 @@ func (r *Repository) getCounterCharacters() (*int, error) {
 	counterM := models.Counters{}
 	info, err := com.FindId(0).Apply(change, &counterM)
 	if err != nil {
+		fmt.Println("Error en encontrar el counter")
 		return nil, err
 	}
 	if info == nil || info.Matched == 0 {

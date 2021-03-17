@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/brianvoe/gofakeit"
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/guadalupej/proyecto/pkg/models"
 )
 
@@ -49,7 +49,7 @@ func TestGetLocations_test(t *testing.T) {
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewService(tt.fields.storage)
-			got, err := s.GetLocations(models.LocationFilters{})
+			got, _, err := s.GetLocations(models.LocationFilters{})
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Service error = %v, wantErr %v", err, tt.wantErr)
 				return

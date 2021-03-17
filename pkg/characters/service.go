@@ -10,7 +10,7 @@ import (
 // storage stores all the
 type storage interface {
 	// characters
-	GetCharacters(filters models.CharactersFilters) ([]models.Character, error)
+	GetCharacters(filters models.CharactersFilters) ([]models.Character, *int, error)
 	GetCharacterByID(id int) (*models.Character, error)
 	InsertCharacter(characters models.Character) error
 }
@@ -25,13 +25,13 @@ func NewService(storage storage) *Service {
 	}
 }
 
-func (s Service) GetCharacters(filters models.CharactersFilters) ([]models.Character, error) {
-	characters, err := s.storage.GetCharacters(filters)
+func (s Service) GetCharacters(filters models.CharactersFilters) ([]models.Character, *int, error) {
+	characters, total, err := s.storage.GetCharacters(filters)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, nil, err
 	}
-	return characters, nil
+	return characters, total, nil
 }
 
 func (s Service) GetCharacterByID(id int) (*models.Character, error) {

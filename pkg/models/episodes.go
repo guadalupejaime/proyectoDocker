@@ -7,7 +7,9 @@ import (
 )
 
 type Episodes struct {
-	Episodes []Episode `bson:"results" json:"results"`
+	Episodes      []Episode `bson:"results" json:"results"`
+	TotalFound    int       `bson:"total_found" json:"total_found"`
+	TotalReturned int       `bson:"total_returned" json:"total_returned"`
 }
 
 func (mt *Episodes) Render(w http.ResponseWriter, r *http.Request) error {

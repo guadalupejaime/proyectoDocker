@@ -10,7 +10,7 @@ import (
 // storage stores all the locations
 type storage interface {
 	// locations
-	GetLocations(filters models.LocationFilters) ([]models.Location, error)
+	GetLocations(filters models.LocationFilters) ([]models.Location, *int, error)
 	GetLocationByID(id int) (*models.Location, error)
 	InsertLocation(location models.Location) error
 }
@@ -25,13 +25,13 @@ func NewService(storage storage) *Service {
 	}
 }
 
-func (s Service) GetLocations(filters models.LocationFilters) ([]models.Location, error) {
-	locations, err := s.storage.GetLocations(filters)
+func (s Service) GetLocations(filters models.LocationFilters) ([]models.Location, *int, error) {
+	locations, total, err := s.storage.GetLocations(filters)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, nil, err
 	}
-	return locations, nil
+	return locations, total, nil
 }
 
 func (s Service) GetLocationByID(id int) (*models.Location, error) {

@@ -7,7 +7,9 @@ import (
 )
 
 type Characters struct {
-	Characters []Character `bson:"results" json:"results"`
+	Characters    []Character `bson:"results" json:"results"`
+	TotalFound    int         `bson:"total_found" json:"total_found"`
+	TotalReturned int         `bson:"total_returned" json:"total_returned"`
 }
 
 type Character struct {
@@ -76,9 +78,6 @@ func (e *CharacterPayload) validate() (err error) {
 	}
 	if e.Species == "" {
 		return errors.New("missing field species")
-	}
-	if e.Type == "" {
-		return errors.New("missing field type")
 	}
 	if len(e.Episode) == 0 {
 		return errors.New("missing field episode")

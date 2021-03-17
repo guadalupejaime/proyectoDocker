@@ -1,6 +1,8 @@
 package http
 
 import (
+	"fmt"
+
 	"github.com/guadalupej/proyecto/pkg/models"
 	"github.com/guadalupej/proyecto/pkg/newerrors"
 )
@@ -11,12 +13,13 @@ type CharactersServiceMock struct {
 	MsgError  string
 }
 
-func (c CharactersServiceMock) GetCharacters(filters models.CharactersFilters) ([]models.Character, error) {
+func (c CharactersServiceMock) GetCharacters(filters models.CharactersFilters) ([]models.Character, *int, error) {
 	err := c.setError()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return c.List, nil
+	total := len(c.List)
+	return c.List, &total, nil
 }
 
 func (c CharactersServiceMock) GetCharacterByID(id int) (*models.Character, error) {
@@ -37,7 +40,7 @@ func (c CharactersServiceMock) InsertCharacter(episodes models.CharacterPayload)
 
 func (c CharactersServiceMock) setError() error {
 	if c.CodeError == 500 {
-		return newerrors.NewErrBadRequest(c.MsgError)
+		return fmt.Errorf(c.MsgError)
 	}
 	if c.CodeError == 404 {
 		return newerrors.NewErrNotFound(c.MsgError)

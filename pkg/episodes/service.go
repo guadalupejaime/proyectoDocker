@@ -10,7 +10,7 @@ import (
 // storage stores all the
 type storage interface {
 	// episodes
-	GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, error)
+	GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, *int, error)
 	GetEpisodeByID(id int) (*models.Episode, error)
 	InsertEpisode(episodes models.Episode) error
 }
@@ -25,13 +25,13 @@ func NewService(storage storage) *Service {
 	}
 }
 
-func (s Service) GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, error) {
-	episodes, err := s.storage.GetEpisodes(filters)
+func (s Service) GetEpisodes(filters models.EpisodesFilters) ([]models.Episode, *int, error) {
+	episodes, total, err := s.storage.GetEpisodes(filters)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, nil, err
 	}
-	return episodes, nil
+	return episodes, total, nil
 }
 
 func (s Service) GetEpisodeByID(id int) (*models.Episode, error) {
