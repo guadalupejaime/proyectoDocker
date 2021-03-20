@@ -2,6 +2,7 @@ package characters
 
 import (
 	"log"
+	"time"
 
 	"github.com/guadalupej/proyecto/pkg/models"
 )
@@ -9,10 +10,11 @@ import (
 // storage stores all the
 type storage interface {
 	// characters
-	GetCharacters(filters models.CharactersFilters) ([]models.Character, error)
+	GetCharacters(filters models.CharactersFilters) ([]models.Character, *int, error)
 	GetCharacterByID(id int) (*models.Character, error)
 	InsertCharacter(characters models.Character) error
 }
+
 type Service struct {
 	storage storage
 }
@@ -23,13 +25,13 @@ func NewService(storage storage) *Service {
 	}
 }
 
-func (s Service) GetCharacters(filters models.CharactersFilters) ([]models.Character, error) {
-	characters, err := s.storage.GetCharacters(filters)
+func (s Service) GetCharacters(filters models.CharactersFilters) ([]models.Character, *int, error) {
+	characters, total, err := s.storage.GetCharacters(filters)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, nil, err
 	}
-	return characters, nil
+	return characters, total, nil
 }
 
 func (s Service) GetCharacterByID(id int) (*models.Character, error) {
@@ -41,8 +43,22 @@ func (s Service) GetCharacterByID(id int) (*models.Character, error) {
 	return characters, nil
 }
 
-func (s Service) InsertCharacter(characters models.Character) error {
-	err := s.storage.InsertCharacter(characters)
+func (s Service) InsertCharacter(characters models.CharacterPayload) error {
+
+	newCharacters := models.Character{
+		Name:     characters.Name,
+		Status:   characters.Status,
+		Species:  characters.Species,
+		Type:     characters.Type,
+		Gender:   characters.Gender,
+		Origin:   characters.Origin,
+		Location: characters.Location,
+		Image:    characters.Image,
+		Episode:  characters.Episode,
+		Created:  time.Now(),
+	}
+
+	err := s.storage.InsertCharacter(newCharacters)
 	if err != nil {
 		log.Println(err)
 		return err

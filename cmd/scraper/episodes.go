@@ -10,24 +10,45 @@ import (
 )
 
 func processEpisodes() (*models.Episodes, error) {
-	response, err := getInfo("https://rickandmortyapi.com/api/episode")
-	if err != nil {
-		log.Println(err)
-		return nil, err
+
+	episodesResp := &models.Episodes{
+		Episodes: make([]models.Episode, 0),
 	}
-	buff := bytes.NewBuffer(response)
-	episodes := &models.Episodes{}
-	err = json.NewDecoder(buff).Decode(episodes)
-	if err != nil {
-		log.Println("error in decode ", err)
-		return nil, err
+
+	episodes := &models.Episodes{
+		Info: models.Info{
+			Next: "https://rickandmortyapi.com/api/episode",
+		},
 	}
-	for i, episode := range episodes.Episodes {
-		for j, character := range episode.Characters {
-			if character != "" {
-				episodes.Episodes[i].Characters[j] = strings.Split(character, "character/")[1]
-			}
+
+	for {
+		response, err := getInfo(episodes.Info.Next)
+		if err != nil {
+			log.Println(err)
+			return nil, err
 		}
+		buff := bytes.NewBuffer(response)
+
+		err = json.NewDecoder(buff).Decode(episodes)
+		if err != nil {
+			log.Println("error in decode ", err)
+			return nil, err
+		}
+
+		for _, episode := range episodes.Episodes {
+			for j, character := range episode.Characters {
+				if character != "" {
+					episode.Characters[j] = strings.Split(character, "character/")[1]
+				}
+			}
+
+			episodesResp.Episodes = append(episodesResp.Episodes, episode)
+		}
+
+		if len(episodesResp.Episodes) >= episodes.Info.Count {
+			break
+		}
+
 	}
-	return episodes, nil
+	return episodesResp, nil
 }

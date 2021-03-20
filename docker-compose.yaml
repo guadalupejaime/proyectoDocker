@@ -27,7 +27,7 @@ services:
   scraper:
     build: 
       context: .
-      dockerfile: Dockerfile_scraper
+      dockerfile: Dockerfile
     container_name: scraperapi
     networks:
       - custom
@@ -36,6 +36,24 @@ services:
     restart: on-failure:5
     depends_on:
       - mongodb
+    command:
+      - ./scraper
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: myapi
+    networks:
+      - custom
+    env_file:
+      - env.list
+    restart: on-failure:5
+    depends_on:
+      - mongodb
+    command:
+      - ./api
+    ports:
+      - "80:8080"
 volumes:
   db-data:
   data:

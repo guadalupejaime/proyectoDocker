@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/guadalupej/proyecto/pkg/models"
 	"github.com/guadalupej/proyecto/pkg/mongo"
 )
 
@@ -21,12 +22,24 @@ func main() {
 		log.Println(err)
 		return
 	}
+	counters := models.Counters{
+		CountEpisode:    0,
+		CountLocation:   0,
+		CountCharacters: 0,
+	}
+	err = db.InsertCounters(counters)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
 	log.Println("process characters...")
 	characters, err := processCharacters()
 	if err != nil {
 		log.Println(err)
 		return
 	}
+
 	log.Println("insert characters...")
 	for _, character := range characters.Characters {
 		err = db.InsertCharacter(character)
@@ -42,6 +55,7 @@ func main() {
 		log.Println(err)
 		return
 	}
+
 	log.Println("insert locations...")
 	for _, location := range locations.Locations {
 		err = db.InsertLocation(location)
@@ -57,6 +71,7 @@ func main() {
 		log.Println(err)
 		return
 	}
+
 	log.Println("insert episodes...")
 	for _, episode := range episodes.Episodes {
 		err = db.InsertEpisode(episode)
@@ -66,6 +81,7 @@ func main() {
 		}
 	}
 }
+
 func getInfo(url string) ([]byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
