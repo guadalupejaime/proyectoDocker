@@ -10,24 +10,45 @@ import (
 )
 
 func processLocations() (*models.Locations, error) {
-	response, err := getInfo("https://rickandmortyapi.com/api/location")
-	if err != nil {
-		log.Println(err)
-		return nil, err
+
+	locationResp := &models.Locations{
+		Locations: make([]models.Location, 0),
 	}
-	buff := bytes.NewBuffer(response)
-	locations := &models.Locations{}
-	err = json.NewDecoder(buff).Decode(locations)
-	if err != nil {
-		log.Println("error in decode ", err)
-		return nil, err
+
+	locations := &models.Locations{
+		Info: models.Info{
+			Next: "https://rickandmortyapi.com/api/location",
+		},
 	}
-	for i, location := range locations.Locations {
-		for j, character := range location.Residents {
-			if character != "" {
-				locations.Locations[i].Residents[j] = strings.Split(character, "character/")[1]
-			}
+
+	for {
+
+		response, err := getInfo(locations.Info.Next)
+		if err != nil {
+			log.Println(err)
+			return nil, err
 		}
+		buff := bytes.NewBuffer(response)
+
+		err = json.NewDecoder(buff).Decode(locations)
+		if err != nil {
+			log.Println("error in decode ", err)
+			return nil, err
+		}
+		for _, location := range locations.Locations {
+			for j, character := range location.Residents {
+				if character != "" {
+					location.Residents[j] = strings.Split(character, "character/")[1]
+				}
+			}
+
+			locationResp.Locations = append(locationResp.Locations, location)
+		}
+
+		if len(locationResp.Locations) >= locations.Info.Count {
+			break
+		}
+
 	}
-	return locations, nil
+	return locationResp, nil
 }
