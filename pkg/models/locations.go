@@ -7,6 +7,7 @@ import (
 )
 
 type Locations struct {
+	Info          Info       `bson:"info,omitempty" json:"info,omitempty"`
 	Locations     []Location `bson:"results" json:"results"`
 	TotalFound    int        `bson:"total_found" json:"total_found"`
 	TotalReturned int        `bson:"total_returned" json:"total_returned"`

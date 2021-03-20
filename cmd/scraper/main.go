@@ -32,12 +32,14 @@ func main() {
 		log.Println(err)
 		return
 	}
+
 	log.Println("process characters...")
 	characters, err := processCharacters()
 	if err != nil {
 		log.Println(err)
 		return
 	}
+
 	log.Println("insert characters...")
 	for _, character := range characters.Characters {
 		err = db.InsertCharacter(character)

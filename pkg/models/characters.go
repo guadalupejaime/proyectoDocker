@@ -7,9 +7,17 @@ import (
 )
 
 type Characters struct {
+	Info          Info        `bson:"info,omitempty" json:"info,omitempty"`
 	Characters    []Character `bson:"results" json:"results"`
 	TotalFound    int         `bson:"total_found" json:"total_found"`
 	TotalReturned int         `bson:"total_returned" json:"total_returned"`
+}
+
+type Info struct {
+	Count int    `bson:"count" json:"count"`
+	Pages int    `bson:"pages" json:"pages"`
+	Next  string `bson:"next" json:"next"`
+	Prev  string `bson:"prev" json:"prev"`
 }
 
 type Character struct {
