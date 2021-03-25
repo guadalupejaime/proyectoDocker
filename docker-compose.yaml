@@ -38,6 +38,17 @@ services:
       - mongodb
     command:
       - ./scraper
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbit
+    hostname: my-rabbit
+    env_file:
+      - env.list
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - custom 
   api:
     build: 
       context: .
@@ -50,10 +61,28 @@ services:
     restart: on-failure:5
     depends_on:
       - mongodb
+      - rabbitmq
     command:
       - ./api
     ports:
       - "80:8080"
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure:10
+    container_name: goworker
+    networks:
+      - custom
+    env_file:
+      - env.list
+    volumes:
+      - type: bind
+        source: ./rabbit
+        target: /proyecto/rabbit/
+    depends_on:
+      - rabbitmq
+    command: ./rabbit
 volumes:
   db-data:
   data:

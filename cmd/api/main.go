@@ -9,6 +9,7 @@ import (
 	"github.com/guadalupej/proyecto/pkg/http"
 	"github.com/guadalupej/proyecto/pkg/locations"
 	"github.com/guadalupej/proyecto/pkg/mongo"
+	"github.com/guadalupej/proyecto/rabbit/publisher"
 )
 
 func main() {
@@ -23,12 +24,18 @@ func main() {
 		return
 	}
 
+	rabbitURL := os.Getenv("RABBITMQURL")
+	log.Println(rabbitURL)
+	qb := publisher.InitRabbit(rabbitURL)
+
+	defer qb.Close()
+
 	controller := http.Controller{
 		CharacterService: *characters.NewService(db),
 		LocationService:  *locations.NewService(db),
 		EpisodeService:   *episodes.NewService(db),
 	}
 
-	http.ListenAndServe(controller)
+	http.ListenAndServe(controller, qb)
 	log.Println("terminó")
 }
