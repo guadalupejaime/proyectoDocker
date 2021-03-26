@@ -1,6 +1,7 @@
 package http
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -18,11 +19,13 @@ type LocationsService interface {
 
 type LocationController struct {
 	LocationsService LocationsService
+	QueueBroker      QueueBrokerService
 }
 
-func NewLocationController(locations LocationsService) *LocationController {
+func NewLocationController(locations LocationsService, qb QueueBrokerService) *LocationController {
 	return &LocationController{
 		LocationsService: locations,
+		QueueBroker:      qb,
 	}
 }
 
@@ -33,6 +36,7 @@ func (c *LocationController) Routes() chi.Router {
 	r.With(middleware.Paginate(100, 500, 0)).Get("/", c.List)
 	r.Get("/{id}", c.Get)
 	r.Post("/", c.Create)
+	r.Post("/rabbit", c.CreateWithRabbit)
 	return r
 }
 
@@ -101,6 +105,31 @@ func (c *LocationController) Create(w http.ResponseWriter, r *http.Request) {
 	err := c.LocationsService.InsertLocation(*data)
 	if err != nil {
 		checkError(err, w, r)
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+
+}
+
+func (c *LocationController) CreateWithRabbit(w http.ResponseWriter, r *http.Request) {
+
+	// Unmarshal User Payload
+	data := &models.LocationPayload{}
+	if err := render.Bind(r, data); err != nil {
+		render.Render(w, r, models.ErrInvalidRequest(err))
+		return
+	}
+
+	// character post via rabbit
+	content, err := json.Marshal(data)
+	if err != nil {
+		render.Render(w, r, models.ErrInvalidRequest(err))
+		return
+	}
+	err = c.QueueBroker.NewMessage(content, "locations")
+	if err != nil {
+		render.Render(w, r, models.ErrInternalServer(err))
+		return
 	}
 
 	w.WriteHeader(http.StatusAccepted)

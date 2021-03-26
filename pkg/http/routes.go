@@ -15,6 +15,7 @@ import (
 	"github.com/guadalupej/proyecto/pkg/locations"
 	"github.com/guadalupej/proyecto/pkg/models"
 	"github.com/guadalupej/proyecto/pkg/newerrors"
+	"github.com/guadalupej/proyecto/rabbit/publisher"
 )
 
 type Controller struct {
@@ -24,7 +25,7 @@ type Controller struct {
 }
 
 // ListenAndServe starts the server
-func ListenAndServe(controller Controller) {
+func ListenAndServe(controller Controller, qb publisher.QueueBroker) {
 
 	r := chi.NewRouter()
 
@@ -47,13 +48,13 @@ func ListenAndServe(controller Controller) {
 	r.Use(cors.Handler)
 
 	// Mount "characters" controller
-	r.Mount("/characters", NewCharacterController(controller.CharacterService).Routes())
+	r.Mount("/characters", NewCharacterController(controller.CharacterService, qb).Routes())
 
 	// Mount "locations" controller
-	r.Mount("/locations", NewLocationController(controller.LocationService).Routes())
+	r.Mount("/locations", NewLocationController(controller.LocationService, qb).Routes())
 
 	// Mount "episodes" controller
-	r.Mount("/episodes", NewEpisodeController(controller.EpisodeService).Routes())
+	r.Mount("/episodes", NewEpisodeController(controller.EpisodeService, qb).Routes())
 
 	// Start service
 	if err := http.ListenAndServe(":8080", r); err != nil {
