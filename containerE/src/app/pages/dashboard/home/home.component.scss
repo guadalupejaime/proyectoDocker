@@ -1,0 +1,43 @@
+@import "../../../shared/baseStyles.scss";
+
+.content {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 450px;
+    position: relative;
+
+    .title {
+        position: absolute;
+        top: 400px;
+        font-weight: bold;
+        font-size: 95px;
+    }
+}
+
+.characters {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 80px 0px;
+    background: $black;
+    color: white;
+
+    .characters-medium {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        width: 85%;
+    }
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    background: $blackMedium;
+}

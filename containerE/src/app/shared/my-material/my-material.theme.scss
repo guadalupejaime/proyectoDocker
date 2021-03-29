@@ -1,0 +1,27 @@
+@import "~@angular/material/theming";
+
+$myFontFamily: "'Oxygen', sans-serif";
+
+$general-typography: mat-typography-config(
+    $font-family: $myFontFamily,
+);
+
+@include mat-core($general-typography);
+
+$candy-app-primary: mat-palette($mat-light-blue, 500);
+$candy-app-accent: mat-palette($mat-green, 600);
+$candy-app-warn: mat-palette($mat-pink, A200);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as `color` or `typography`.
+$light-app-theme: mat-light-theme(
+    (
+        color: (
+            primary: $candy-app-primary,
+            accent: $candy-app-accent,
+            warn: $candy-app-warn,
+        ),
+    )
+);
+
+@include angular-material-theme($light-app-theme);

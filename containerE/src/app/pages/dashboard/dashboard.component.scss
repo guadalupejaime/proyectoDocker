@@ -1,0 +1,10 @@
+.navbar {
+    position: fixed;
+    z-index: 1;
+    .init {
+        cursor: pointer;
+    }
+    .spacer {
+        flex: 1 1 auto;
+    }
+}

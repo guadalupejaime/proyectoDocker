@@ -1,0 +1,16 @@
+<div class="content">
+    <img src="../../../../assets/img/background.jpg" alt="background" style="margin-top: 60px;">
+    <div class="title">The Rick and Morty</div>
+</div>
+
+<div class="characters">
+    <div class="characters-medium">
+        <div *ngFor="let character of characters">
+            <app-card [character]="character"></app-card>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    
+</div>
