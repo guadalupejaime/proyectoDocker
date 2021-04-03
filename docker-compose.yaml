@@ -25,7 +25,7 @@ services:
     depends_on:
       - mongodb
   scraper:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: scraperapi
@@ -48,9 +48,9 @@ services:
       - 5672:5672
       - 15672:15672
     networks:
-      - custom 
+      - custom
   api:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: myapi
@@ -83,6 +83,19 @@ services:
     depends_on:
       - rabbitmq
     command: ./rabbit
+  frontend:
+    build:
+      context: ./containerE
+      dockerfile: Dockerfile
+    container_name: myfrontend
+    networks:
+      - custom
+    restart: on-failure:5
+    depends_on:
+      - api
+    ports:
+      - "4200:4200"
+    command: bash -c "ng serve --host 0.0.0.0 --port 4200"
 volumes:
   db-data:
   data:

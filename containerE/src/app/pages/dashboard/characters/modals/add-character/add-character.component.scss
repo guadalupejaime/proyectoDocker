@@ -1,0 +1,28 @@
+.form {
+    .area-img {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .other-side {
+            width: 75%;
+            .box {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+            }
+        }
+    }
+}
+
+.area-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

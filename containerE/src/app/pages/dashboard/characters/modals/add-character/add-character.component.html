@@ -1,0 +1,86 @@
+<app-modal-template [status]="'ok'" [titulo]="'Add character'" (closeModal)="sMatDialogRef.close(0)">
+  <div class="form" [formGroup]="formCharacters">
+    <div class="area-img">
+      <img [src]="formCharacters.get('image').value" alt="" width="170px" height="170px">
+      <div class="other-side">
+        <mat-form-field appearance="standard" class="myInput_1">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+        <div class="box">
+          <mat-form-field appearance="standard" class="myInput_3">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let status of allStatus" [value]="status.value">{{status.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="standard" class="myInput_3">
+            <mat-label>Specie</mat-label>
+            <mat-select formControlName="species">
+              <mat-option *ngFor="let specie of allSpecies" [value]="specie.value">{{specie.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="standard" class="myInput_3">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option *ngFor="let gender of allGenders" [value]="gender.value">{{gender.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="standard" class="myInput_1">
+          <mat-label>URL Image</mat-label>
+          <input matInput formControlName="image">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <mat-form-field appearance="standard" class="myInput_1">
+    <mat-label>Type</mat-label>
+    <input matInput [formControl]="ctrlType">
+  </mat-form-field>
+  <div class="box">
+    <mat-form-field appearance="standard" class="myInput_2">
+      <mat-label>Origin</mat-label>
+      <input type="text" matInput [matAutocomplete]="autoOrigin" [formControl]="ctrlOrigin">
+      <mat-autocomplete autoActiveFirstOption #autoOrigin="matAutocomplete" [displayWith]="displayFn"
+        (optionSelected)="filterOriginSelected($event.option.value)">
+        <mat-option *ngFor="let location of filteredOptions" [value]="location">
+          {{location.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field appearance="standard" class="myInput_2">
+      <mat-label>Location</mat-label>
+      <input type="text" matInput [matAutocomplete]="autoLocation" [formControl]="ctrlLocations">
+      <mat-autocomplete autoActiveFirstOption #autoLocation="matAutocomplete" [displayWith]="displayFn"
+        (optionSelected)="filterLocationSelected($event.option.value)">
+        <mat-option *ngFor="let location of filteredOptions" [value]="location">
+          {{location.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <mat-form-field appearance="standard" class="myInput_1">
+    <mat-label>Episode</mat-label>
+
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let item of selectedEpisodes" [selectable]="true" [removable]="true"
+        (removed)="removeEpisode(item)">{{ item.name }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input type="text" #episodeInput matInput [matAutocomplete]="autoEpisode" [formControl]="ctrlEpisode"
+        [matChipInputFor]="chipList">
+    </mat-chip-list>
+
+    <mat-autocomplete autoActiveFirstOption #autoEpisode="matAutocomplete" [displayWith]="displayFnEpisode" multiple>
+      <mat-option *ngFor="let episode of filteredEpisodes" [value]="episode" (click)="changeEpisodes(episode)">
+        <mat-checkbox [checked]="episode.checked">{{episode.name}}</mat-checkbox>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <div class="area-buttons">
+    <button mat-raised-button color="accent" (click)="postCharacter()">
+      <mat-icon>save</mat-icon>&nbsp;Save
+    </button>
+  </div>
+</app-modal-template>

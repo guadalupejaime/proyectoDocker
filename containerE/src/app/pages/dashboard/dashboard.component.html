@@ -1,0 +1,17 @@
+<mat-toolbar class="navbar mat-elevation-z4" color="primary">
+    <div class="init" matRipple routerLink="/home">Rick and Morty</div>
+    <span class="spacer"></span>
+    <button mat-button routerLink="/characters" routerLinkActive="mat-elevation-z4">
+        <mat-icon>group</mat-icon>&nbsp;Characters
+    </button>
+    <button mat-button routerLink="/episodes" routerLinkActive="mat-elevation-z4">
+        <mat-icon>tv</mat-icon>&nbsp;Episodes
+    </button>
+    <button mat-button routerLink="/locations" routerLinkActive="mat-elevation-z4">
+        <mat-icon>place</mat-icon>&nbsp;Locations
+    </button>
+    <button mat-raised-button color="accent">Help us</button>
+</mat-toolbar>
+<div>
+    <router-outlet></router-outlet>
+</div>

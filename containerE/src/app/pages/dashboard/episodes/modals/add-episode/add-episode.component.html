@@ -1,0 +1,46 @@
+<app-modal-template [status]="'ok'" [titulo]="'Add episode'" (closeModal)="sMatDialogRef.close(0)">
+    <div class="form" [formGroup]="formEpisode">
+        <mat-form-field appearance="standard" class="myInput_1">
+            <mat-label>Episode name</mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+        <div class="box">
+            <mat-form-field appearance="standard" class="myInput_2">
+                <mat-label>Air Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="air_date" [max]="today">
+                <mat-datepicker-toggle matSuffix [for]="picker">
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="standard" class="myInput_2">
+                <mat-label>Episode Code</mat-label>
+                <input matInput formControlName="episode">
+            </mat-form-field>
+        </div>
+    </div>
+    <mat-form-field appearance="standard" class="myInput_1">
+        <mat-label>Characters</mat-label>
+
+        <mat-chip-list #chipList>
+            <mat-chip *ngFor="let item of selectedCharacters" [selectable]="true" [removable]="true"
+                (removed)="removeEpisode(item)">{{ item.name }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input type="text" #characterInput matInput [matAutocomplete]="autoCharacter" [formControl]="ctrlCharacters"
+                [matChipInputFor]="chipList">
+        </mat-chip-list>
+
+        <mat-autocomplete autoActiveFirstOption #autoCharacter="matAutocomplete" [displayWith]="displayFnCharacter"
+            multiple>
+            <mat-option *ngFor="let character of filteredCharacters" [value]="character"
+                (click)="changeCharacters(character)">
+                <mat-checkbox [checked]="character.checked">{{character.name}}</mat-checkbox>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <div class="area-buttons">
+        <button mat-raised-button color="accent" (click)="postEpisode()">
+            <mat-icon>save</mat-icon>&nbsp;Save
+        </button>
+    </div>
+</app-modal-template>

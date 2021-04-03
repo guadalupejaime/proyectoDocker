@@ -1,0 +1,42 @@
+<app-page-template [status]="status" title="Episodes">
+    <div class="content">
+        <div class="actions-bar mat-elevation-z3">
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search something..." autocomplete="off" #input>
+            <button mat-raised-button color="accent" (click)="addEpisode()">
+                <mat-icon>add</mat-icon>
+                Add episode
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </button>
+        </div>
+        <div class="table mat-elevation-z8">
+            <table class="myTable" mat-table [dataSource]="dataEpisodes">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="air_date">
+                    <th mat-header-cell *matHeaderCellDef> Air Date </th>
+                    <td mat-cell *matCellDef="let element"> {{element.air_date}} </td>
+                </ng-container>
+                <ng-container matColumnDef="episode">
+                    <th mat-header-cell *matHeaderCellDef> Episode Code </th>
+                    <td mat-cell *matCellDef="let element"> {{element.episode}} </td>
+                </ng-container>
+                <ng-container matColumnDef="info">
+                    <th mat-header-cell *matHeaderCellDef> Information </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button color="warn" (click)="infoEpisode(element.id)">
+                            <mat-icon>info</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <mat-paginator class="paginator mat-elevation-z8" [length]="totalEpisodes" [pageSize]="this.sizePage"
+            [pageSizeOptions]="[10, 20, 50, 100]" (page)="updatePaginatorSettings($event)" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</app-page-template>

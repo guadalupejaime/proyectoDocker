@@ -1,0 +1,25 @@
+@use 'src/app/shared/baseStyles.scss' as gral;
+
+@import "./app/shared/my-material/my-material.theme.scss";
+@import "./app/shared/my-material/my-material.scss";
+@import "./app/shared/app.class.scss";
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Oxygen", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 !important;
+  padding: 0 !important;
+}

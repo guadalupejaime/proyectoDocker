@@ -1,0 +1,13 @@
+<span [ngSwitch]="status">
+    <div *ngSwitchCase="'load'">
+        <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+    </div>
+    <div *ngSwitchCase="'ok'">
+        <div class="title">{{title}}</div>
+        <ng-content></ng-content>
+    </div>
+    <div *ngSwitchDefault class="error-content">
+        <img src="https://rickandmortyapi.com/api/character/avatar/19.jpeg" alt="unknown">
+        <p><strong>¡UPS, algo salió mal!</strong><br>Favor de revisar su conexión a internet</p>
+    </div>
+</span>
