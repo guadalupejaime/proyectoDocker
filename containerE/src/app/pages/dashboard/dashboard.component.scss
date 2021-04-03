@@ -1,6 +1,7 @@
 .navbar {
-    position: fixed;
+    position: sticky;
     z-index: 1;
+    top: 0;
     .init {
         cursor: pointer;
     }

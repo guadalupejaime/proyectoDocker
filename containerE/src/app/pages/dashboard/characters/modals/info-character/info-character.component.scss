@@ -1,0 +1,45 @@
+@use 'src/app/shared/baseStyles.scss' as gral;
+
+.form {
+    .area-img {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .other-side {
+            width: 75%;
+            .box {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+            }
+        }
+    }
+}
+
+.episodes {
+    overflow: auto;
+    width: 700px;
+    height: 150px;
+    display: flex;
+    flex-wrap: wrap;
+
+    .episode {
+        background: lightgray;
+        padding: 5px 10px;
+        border-radius: 10px;
+        margin: 10px;
+    }
+}
+
+.area-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

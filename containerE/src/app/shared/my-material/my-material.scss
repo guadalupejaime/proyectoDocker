@@ -1,0 +1,25 @@
+@use 'src/app/shared/baseStyles.scss' as gral;
+
+// mat-table
+.myTable th {
+    background: #88c38a;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+tr:hover {
+    background: rgb(219, 219, 219);
+}
+
+// mat-dialog
+.myModal .mat-dialog-container {
+    background: transparent;
+    box-shadow: unset;
+    padding: 0px;
+    border-radius: 20px;
+}
+
+.myBackdrop {
+    background: rgba(black, 0.65);
+}

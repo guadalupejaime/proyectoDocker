@@ -1,0 +1,42 @@
+<div [ngSwitch]="status">
+    <div *ngSwitchCase="'load'">
+        <!-- <app-loadin-tables [infoTable]="test" [msgError]="msg"></app-loadin-tables> -->
+        <!-- <app-my-loading [colorBlue]="false"></app-my-loading> -->
+        <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+    </div>
+
+    <div *ngSwitchCase="'ok'" class="ok-content" [ngStyle]="{'min-width': widthModal}">
+        <div class="top-area mat-elevation-z1">
+            <div class="title">{{titulo}}</div>
+            <div class="area-close">
+                <button mat-icon-button style="color: white;" (click)="closeModal.emit();">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="content-area">
+            <ng-content></ng-content>
+        </div>
+    </div>
+
+    <div *ngSwitchCase="'bad'" class="error-content">
+        <div class="top-area">
+            <div class="area-x">
+                <div class="x">
+                    <i class="icon-wrong error-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="content-area">
+            <div class="title">¡Algo salió mal!</div>
+            <div>Revisa tu conexión a Internet</div>
+            <div class="area-btn">
+                <button mat-stroked-button color="warn" (click)="closeModal.emit()">
+                    <i class="icon-wrong" style="font-size: 22px;"></i>
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««« bad  -->
+</div>

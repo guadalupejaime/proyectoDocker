@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./episodes.component.scss']
 })
 export class EpisodesComponent implements OnInit {
-
+  status = 'load';
   constructor() { }
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.status = 'ok';
+    }, 800);
   }
 
 }

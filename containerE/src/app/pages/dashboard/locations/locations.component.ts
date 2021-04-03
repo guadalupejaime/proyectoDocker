@@ -6,10 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./locations.component.scss']
 })
 export class LocationsComponent implements OnInit {
+  status = 'load';
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.status = 'ok';
+    }, 800);
   }
 
 }

@@ -1,8 +1,8 @@
-@import "../../baseStyles.scss";
+@use 'src/app/shared/baseStyles.scss' as gral;
 
 .content {
     display: flex;
-    background: $blackLight;
+    background: gral.$blackLight;
     border-radius: 10px;
     margin: 10px;
     height: 180px;
@@ -47,13 +47,13 @@
         .location {
             margin-top: 15px;
             font-size: 13px;
-            color: $grey;
+            color: gral.$grey;
         }
 
         .gender {
             margin-top: 5px;
             font-size: 13px;
-            color: $grey;
+            color: gral.$grey;
         }
 
         .data-gender {

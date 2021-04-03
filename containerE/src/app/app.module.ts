@@ -8,11 +8,10 @@ import { MyMaterialModule } from '@shared/my-material/my-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardModule } from '@pages/dashboard/dashboard.module';
-import { CardComponent } from './shared/components/card/card.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

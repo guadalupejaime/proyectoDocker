@@ -1,0 +1,12 @@
+// @use '../../baseStyles.scss' as gral;
+@use 'src/app/shared/baseStyles.scss' as gral;
+
+.title {
+    margin-top: 20px;
+    font-size: 30px;
+    color: gral.$blackMedium;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}

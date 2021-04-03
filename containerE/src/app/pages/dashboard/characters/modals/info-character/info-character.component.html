@@ -1,0 +1,63 @@
+<app-modal-template [status]="status" [titulo]="'Information'" (closeModal)="sMatDialogRef.close(0)">
+    <mat-progress-bar *ngIf="status === 'load'" [mode]="'indeterminate'"></mat-progress-bar>
+    <div *ngIf="status !== 'load'">
+        <div class="form">
+            <div class="area-img">
+                <img [src]="character.image" alt="" width="170px" height="170px">
+                <div class="other-side">
+                    <mat-form-field appearance="standard" class="myInput_1">
+                        <mat-label>Name</mat-label>
+                        <input matInput [value]="character.name" disabled>
+                    </mat-form-field>
+                    <div class="box">
+                        <mat-form-field appearance="standard" class="myInput_3">
+                            <mat-label>Status</mat-label>
+                            <input matInput [value]="character.status" disabled>
+                        </mat-form-field>
+                        <mat-form-field appearance="standard" class="myInput_3">
+                            <mat-label>Specie</mat-label>
+                            <input matInput [value]="character.species" disabled>
+                        </mat-form-field>
+                        <mat-form-field appearance="standard" class="myInput_3">
+                            <mat-label>Gender</mat-label>
+                            <input matInput [value]="character.gender" disabled>
+                        </mat-form-field>
+                    </div>
+                    <mat-form-field appearance="standard" class="myInput_1">
+                        <mat-label>URL Image</mat-label>
+                        <input matInput [value]="character.image" disabled>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <mat-form-field appearance="standard" class="myInput_1">
+            <mat-label>Type</mat-label>
+            <input matInput [value]="character.type ? character.type: 'No Type'" disabled>
+        </mat-form-field>
+        <div class="box">
+            <mat-form-field appearance="standard" class="myInput_2">
+                <mat-label>Origin</mat-label>
+                <input matInput [value]="character.origin.name" disabled>
+            </mat-form-field>
+            <mat-form-field appearance="standard" class="myInput_2">
+                <mat-label>Location</mat-label>
+                <input matInput [value]="character.location.name" disabled>
+            </mat-form-field>
+        </div>
+        <mat-label *ngIf="character.episode.length > 5">Episodes</mat-label>
+        <span [ngSwitch]="character.episode.length > 5">
+            <div *ngSwitchCase="true" class="episodes">
+                <span class="episode" *ngFor="let episode of episodes">{{episode}}</span>
+            </div>
+            <mat-form-field *ngSwitchDefault appearance="standard" class="myInput_1">
+                <mat-label>Episode(s)</mat-label>
+                <input matInput [value]="episodes.join(', ')" disabled>
+            </mat-form-field>
+        </span>
+    </div>
+    <!-- <div class="area-buttons">
+        <button mat-raised-button color="accent" (click)="postCharacter()">
+            <mat-icon>save</mat-icon>&nbsp;Save
+        </button>
+    </div> -->
+</app-modal-template>

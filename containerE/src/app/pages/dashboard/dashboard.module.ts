@@ -8,7 +8,6 @@ import { CharactersModule } from '@pages/dashboard/characters/characters.module'
 import { EpisodesModule } from '@pages/dashboard/episodes/episodes.module';
 import { LocationsModule } from '@pages/dashboard/locations/locations.module';
 import { HomeModule } from '@pages/dashboard/home/home.module';
-import { CardComponent } from '@shared/components/card/card.component';
 
 
 
