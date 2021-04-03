@@ -125,7 +125,6 @@ export class AddLocationComponent implements OnInit {
           this.sMatDialogRef.close(true);
         },
         (err) => {
-          console.log(err);
           this.sMatDialogRef.close('error');
         }
       );

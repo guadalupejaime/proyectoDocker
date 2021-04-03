@@ -56,7 +56,7 @@ export class HttpService {
   }
 
   getEpisode(idEpisode: string): Observable<Episode> {
-    const myUrl = urlList.episodes + '/' + idEpisode
+    const myUrl = urlList.episodes + '/' + idEpisode;
     return this.sHttpClient.get<Episode>(myUrl);
   }
 

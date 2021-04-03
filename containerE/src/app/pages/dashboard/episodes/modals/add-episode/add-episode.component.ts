@@ -133,14 +133,11 @@ export class AddEpisodeComponent implements OnInit {
       const date = this.formEpisode.get('air_date').value;
       newEpisode.air_date = this.formatDate(date);
 
-      console.log('new-episode', newEpisode);
-
       this.sHttpService.postEpisode(newEpisode).subscribe(
         (resp) => {
           this.sMatDialogRef.close(true);
         },
         (err) => {
-          console.log(err);
           this.sMatDialogRef.close('error');
         }
       );
