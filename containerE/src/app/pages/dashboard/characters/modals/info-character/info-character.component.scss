@@ -20,11 +20,12 @@
 .episodes {
     overflow: auto;
     width: 700px;
-    height: 150px;
+    max-height: 150px;
     display: flex;
     flex-wrap: wrap;
 
     .episode {
+        height: fit-content;
         background: lightgray;
         padding: 5px 10px;
         border-radius: 10px;

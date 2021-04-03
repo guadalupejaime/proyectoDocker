@@ -11,11 +11,12 @@
 .characters {
     overflow: auto;
     width: 600px;
-    height: 150px;
+    max-height: 150px;
     display: flex;
     flex-wrap: wrap;
 
     .character {
+        height: fit-content;
         display: flex;
         justify-content: center;
         align-items: center;
