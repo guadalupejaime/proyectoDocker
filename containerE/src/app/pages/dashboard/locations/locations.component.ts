@@ -102,6 +102,7 @@ export class LocationsComponent implements OnInit {
       (result) => {
         if (result) {
           this.openNotification('Added new character, success!');
+          this.updateLocations();
           return;
         } else if (result === 'error') {
           this.openNotification('Something went wrong!');

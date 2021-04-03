@@ -101,6 +101,7 @@ export class EpisodesComponent implements OnInit {
       (result) => {
         if (result) {
           this.openNotification('Added new episode, success!');
+          this.updateEpisodes();
           return;
         } else if (result === 'error') {
           this.openNotification('Something went wrong!');

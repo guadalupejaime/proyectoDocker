@@ -102,6 +102,7 @@ export class CharactersComponent implements OnInit {
       (result) => {
         if (result) {
           this.openNotification('Added new character, success!');
+          this.updateCharacters();
           return;
         } else if (result === 'error') {
           this.openNotification('Something went wrong!');

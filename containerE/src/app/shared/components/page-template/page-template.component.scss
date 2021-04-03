@@ -10,3 +10,21 @@
     align-items: center;
     font-weight: bold;
 }
+
+.error-content {
+    padding-top: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    height: 70vh;
+    img {
+        height: 55%;
+        opacity: 0.8;
+    }
+    p {
+        text-align: center;
+        color: rgb(50, 50, 50);
+        font-size: 25px;
+    }
+}
