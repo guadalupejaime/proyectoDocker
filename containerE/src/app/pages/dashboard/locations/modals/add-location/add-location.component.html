@@ -1,0 +1,43 @@
+<app-modal-template [status]="'ok'" [titulo]="'Add location'" (closeModal)="sMatDialogRef.close(0)">
+    <div class="form" [formGroup]="formLocation">
+        <mat-form-field appearance="standard" class="myInput_1">
+            <mat-label>Location name</mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+        <div class="box">
+            <mat-form-field appearance="standard" class="myInput_2">
+                <mat-label>Type</mat-label>
+                <input matInput formControlName="type">
+            </mat-form-field>
+            <mat-form-field appearance="standard" class="myInput_2">
+                <mat-label>Dimension</mat-label>
+                <input matInput formControlName="dimension">
+            </mat-form-field>
+        </div>
+    </div>
+    <mat-form-field appearance="standard" class="myInput_1">
+        <mat-label>Residents</mat-label>
+
+        <mat-chip-list #chipList>
+            <mat-chip *ngFor="let item of selectedCharacters" [selectable]="true" [removable]="true"
+                (removed)="removeEpisode(item)">{{ item.name }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input type="text" #locationInput matInput [matAutocomplete]="autoCharacter" [formControl]="ctrlCharacters"
+                [matChipInputFor]="chipList">
+        </mat-chip-list>
+
+        <mat-autocomplete autoActiveFirstOption #autoCharacter="matAutocomplete" [displayWith]="displayFnCharacter"
+            multiple>
+            <mat-option *ngFor="let character of filteredCharacters" [value]="character"
+                (click)="changeCharacters(character)">
+                <mat-checkbox [checked]="character.checked">{{character.name}}</mat-checkbox>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <div class="area-buttons">
+        <button mat-raised-button color="accent" (click)="postLocation()">
+            <mat-icon>save</mat-icon>&nbsp;Save
+        </button>
+    </div>
+</app-modal-template>

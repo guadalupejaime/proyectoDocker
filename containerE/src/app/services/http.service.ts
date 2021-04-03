@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Character, Characters } from '@pages/dashboard/characters/characters.interface';
 import { Episode, Episodes } from '@pages/dashboard/episodes/episodes.interface';
-import { Locations } from '@pages/dashboard/locations/locations.interface';
+import { Locations, Location } from '@pages/dashboard/locations/locations.interface';
 import { TablePage } from '@services/http.interfaces';
 import { urlList } from '@services/urlList';
 import { Observable } from 'rxjs';
@@ -69,5 +69,16 @@ export class HttpService {
   getLocations(pagina: TablePage = { offset: 0, limit: 100 }): Observable<Locations> {
     const myUrl = urlList.locations + '?' + this.makeUrlParams(pagina);
     return this.sHttpClient.get<Locations>(myUrl);
+  }
+
+
+  getLocation(idLocation: string): Observable<Location> {
+    const myUrl = urlList.locations + '/' + idLocation;
+    return this.sHttpClient.get<Location>(myUrl);
+  }
+
+  postLocation(location: Location): any {
+    const myUrl = urlList.locations + '/rabbit';
+    return this.sHttpClient.post(myUrl, location);
   }
 }
