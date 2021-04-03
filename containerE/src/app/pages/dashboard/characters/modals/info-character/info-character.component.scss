@@ -36,6 +36,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 10px;
+
+    .button {
+        padding: 0px 50px;
+    }
 }
 
 .box {
