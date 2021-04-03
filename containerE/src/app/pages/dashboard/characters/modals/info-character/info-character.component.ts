@@ -33,8 +33,6 @@ export class InfoCharacterComponent implements OnInit {
           if (epi.length > 2) {
             const url = epi.split('/');
             id = url[url.length - 1];
-            console.log(epi.split('/'));
-            console.log(id);
           }
           this.getNameEpisode(id);
         });

@@ -1,7 +1,6 @@
 <app-page-template [status]="status" title="Characters">
     <div class="content">
         <div class="actions-bar mat-elevation-z3">
-            <!-- <mat-label>Filter</mat-label> -->
             <input matInput (keyup)="applyFilter($event)" placeholder="Search something..." autocomplete="off" #input>
             <button mat-raised-button color="accent" (click)="addCharacter()">
                 <mat-icon>add</mat-icon>

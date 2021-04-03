@@ -83,7 +83,7 @@ export class CharactersComponent implements OnInit {
       disableClose: true,
       panelClass: 'myModal',
       backdropClass: 'myBackdrop',
-      data: {idCharacter: id}
+      data: { idCharacter: id }
     });
   }
 
@@ -103,8 +103,9 @@ export class CharactersComponent implements OnInit {
         if (result) {
           this.openNotification('Added new character, success!');
           return;
+        } else if (result === 'error') {
+          this.openNotification('Something went wrong!');
         }
-        this.openNotification('Something went wrong!');
       });
   }
 

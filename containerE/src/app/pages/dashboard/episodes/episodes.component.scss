@@ -1,0 +1,32 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+
+    .actions-bar {
+        box-sizing: border-box;
+        width: 80%;
+        margin-bottom: 10px;
+        padding: 15px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .table {
+        width: 80%;
+        overflow: auto;
+        height: 650px;
+
+        table {
+            width: 100%;
+        }
+    }
+
+    .paginator {
+        width: 80%;
+        z-index: 1;
+    }
+}

@@ -60,6 +60,11 @@ export class HttpService {
     return this.sHttpClient.get<Episode>(myUrl);
   }
 
+  postEpisode(episode: Episode): any {
+    const myUrl = urlList.episodes + '/rabbit';
+    return this.sHttpClient.post(myUrl, episode);
+  }
+
   /** locations */
   getLocations(pagina: TablePage = { offset: 0, limit: 100 }): Observable<Locations> {
     const myUrl = urlList.locations + '?' + this.makeUrlParams(pagina);

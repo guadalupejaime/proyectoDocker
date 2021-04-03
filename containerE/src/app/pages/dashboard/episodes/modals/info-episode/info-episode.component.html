@@ -1,0 +1,31 @@
+<app-modal-template [status]="status" [titulo]="'Information'" (closeModal)="sMatDialogRef.close(0)">
+    <mat-progress-bar *ngIf="status === 'load'" [mode]="'indeterminate'"></mat-progress-bar>
+    <div *ngIf="status !== 'load'">
+        <div class="form">
+            <mat-form-field appearance="standard" class="myInput_1">
+                <mat-label>Episode name</mat-label>
+                <input matInput [value]="episode.name" disabled>
+            </mat-form-field>
+            <div class="box">
+                <mat-form-field appearance="standard" class="myInput_2">
+                    <mat-label>Air Date</mat-label>
+                    <input matInput [value]="episode.air_date" disabled>
+                </mat-form-field>
+                <mat-form-field appearance="standard" class="myInput_2">
+                    <mat-label>Episode Code</mat-label>
+                    <input matInput disabled [value]="episode.episode">
+                </mat-form-field>
+            </div>
+            <mat-label>Episode character's</mat-label>
+            <div class="characters">
+                <span class="character" *ngFor="let character of characters">{{character}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="area-buttons">
+        <button class="button" mat-raised-button color="accent" (click)="sMatDialogRef.close()">
+            <mat-icon>check</mat-icon>&nbsp;Ok
+            &nbsp;
+        </button>
+    </div>
+</app-modal-template>

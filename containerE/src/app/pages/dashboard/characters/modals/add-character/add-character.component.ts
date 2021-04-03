@@ -208,8 +208,7 @@ export class AddCharacterComponent implements OnInit {
           this.sMatDialogRef.close(true);
         },
         (err) => {
-          console.log(err);
-          this.sMatDialogRef.close(false);
+          this.sMatDialogRef.close('error');
         }
       );
     }

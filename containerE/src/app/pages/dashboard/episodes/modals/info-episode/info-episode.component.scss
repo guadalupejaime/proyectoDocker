@@ -1,0 +1,38 @@
+@use 'src/app/shared/baseStyles.scss' as gral;
+
+.form {
+    .box {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+}
+
+.characters {
+    overflow: auto;
+    width: 600px;
+    height: 150px;
+    display: flex;
+    flex-wrap: wrap;
+
+    .character {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: lightgray;
+        padding: 5px 10px;
+        border-radius: 10px;
+        margin: 10px;
+    }
+}
+
+.area-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+
+    .button {
+        padding: 0px 50px;
+    }
+}

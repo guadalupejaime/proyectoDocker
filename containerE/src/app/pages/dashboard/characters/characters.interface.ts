@@ -10,6 +10,7 @@ export interface Character {
     species: string;
     status: string;
     type: string;
+    checked?: boolean;
 }
 
 export interface Info {
